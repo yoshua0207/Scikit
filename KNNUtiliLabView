@@ -1,0 +1,74 @@
+from sklearn import datasets
+from sklearn import metrics
+from sklearn.neighbors import KNeighborsClassifier
+from nptdms import TdmsFile
+import numpy as np
+import pandas as pandas
+lampTrain1 = np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/Lamp/LampAverage_1.csv',delimiter=' ',dtype=None)
+
+# Lamp Training
+lamp_tdms = TdmsFile("Lamp_001.tdms")
+a = lamp_tdms.object("Untitled","Untitled 5")
+
+x_train=np.array([a.data])
+y_train = np.array(['lamp'])
+for x in range(1, 5):
+    a = lamp_tdms.object("Untitled","Untitled "+str(x*10))
+   
+    np1=np.array([a.data])
+    x_train = np.concatenate((x_train,np1),axis=0)
+    y_train = np.concatenate((y_train,['lamp']),axis=0)
+
+# Hair Drier Training
+hairDrier_tdms = TdmsFile("HairDyer_001.tdms")
+for x in range(1, 6):
+    a = lamp_tdms.object("Untitled","Untitled "+str(x*10))
+  
+    np1=np.array([a.data])
+    x_train = np.concatenate((x_train,np1),axis=0)
+    y_train = np.concatenate((y_train,['hairDrier']),axis=0)
+
+# No Load Training
+noLoad_tdms = TdmsFile("NoLoad_001.tdms")
+for x in range(1, 6):
+    a = noLoad_tdms.object("Untitled","Untitled "+str(x*10))
+ 
+    np1=np.array([a.data])
+    x_train = np.concatenate((x_train,np1),axis=0)
+    y_train = np.concatenate((y_train,['hairDrier']),axis=0)
+
+# Model Fit
+
+# Data Set
+random_tdms = TdmsFile("Random_001.tdms")
+b = random_tdms.object("Untitled", "Untitled")
+x_set=np.array([b.data])
+
+for x in range(1, 60):
+    b = random_tdms.object("Untitled","Untitled "+str(x))
+    np1=np.array([b.data])
+    x_set = np.concatenate((x_set,np1),axis=0)
+   
+
+
+# lampSet6=np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/Lamp/LampAverage_7.csv',delimiter=' ',dtype=None)
+# hairSet6 = np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/HairDryer/HairDryMedHLowSAverage_11.csv',delimiter=' ',dtype=None)
+# dellChargerSet6 = np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/DellCharger/DellChargerAverage_12.csv',delimiter=' ',dtype=None)
+# macChargerSet6 = np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/MacCharger/MacChargerAverage_10.csv',delimiter=' ',dtype=None)
+# YoBlenderSet6 = np.genfromtxt('/Users/Chryssia/Desktop/SchoolStuff/Gatech/ECE4011/SeniorDesign/Scikit/MachineLearningData/YoBlender/YoBlenderAverage_9.csv',delimiter=' ',dtype=None)
+
+# Reading tdms
+# tdms_file = TdmsFile("testaa_001.tdms")
+# a=tdms_file.object("Untitled","Untitled 1")
+# dataSet = a.data
+
+# x_set= np.array([lampSet6, hairSet6, dellChargerSet6, macChargerSet6, YoBlenderSet6,dataSet])
+# expected=np.array(['Lamp','HairDryer','DellCharger','MacCharger','Blender'])
+model=KNeighborsClassifier()
+model.fit(x_train,y_train)
+
+predicted=model.predict(x_set)
+print("predicted")
+print(predicted)
+# print("expected")
+# print(expected)
